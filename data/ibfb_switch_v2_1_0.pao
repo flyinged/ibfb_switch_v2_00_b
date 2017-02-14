@@ -1,0 +1,22 @@
+#------------------------------------------------------------------------------
+#--                       Paul Scherrer Institute (PSI)
+#------------------------------------------------------------------------------
+#-- Unit    : ibfb_switch_v2_00_b.pao
+#-- Author  : Alessandro Malatesta, Section Diagnostic
+#-- Version : $Revision: 1.1 $
+#------------------------------------------------------------------------------
+#-- Copyright© PSI, Section Diagnostic
+#------------------------------------------------------------------------------
+#-- Comment : Virtex-5, GTX, 3.125Gb/s 
+#------------------------------------------------------------------------------
+
+lib proc_common_v3_00_a  all 
+lib plbv46_slave_burst_v1_01_a  all 
+lib ibfb_common_v1_00_b all
+
+##------- Virtex-5 technology library -----------------------------------------
+lib fpga_technology_package_virtex5_v1_00_a fpga_technology_package_virtex5.vhd vhdl
+
+##------- Virtex-5 GTX library ------------------------------------------------
+lib ibfb_switch_v2_00_b user_logic.vhd
+lib ibfb_switch_v2_00_b ibfb_switch.vhd

@@ -1,0 +1,26 @@
+{
+  //head:{
+  // text:'IBFB Cavity BPM ADC Interface',
+  //}, //end of head
+  signal: [
+  // ['ADC CLOCK',
+    {name: 'i_clk',         wave: 'p.....|........|.....'},
+    {name: 'i_trig_re',     wave: '010...|........|10...'},
+ //   {name: 'trig_r',        wave: '=====|.====|........|.==', data: '0000 0001 0011 0111 1111 1110 1100 1000 0000 0001 0011'},
+ //   {name: 'reset_flags',   wave: '0..1..|......0.|..1'},
+    {name: 'trig_cnt',      wave: '=..=..|........|..=..', data: '0 1 2 3'},
+    {name: 'ping0_valid',   wave: '0...10|........|...10'},
+    {name: 'ping0_sent',    wave: '0...1.|.......0|...1.'},
+    {name: 'ping_rx_sop',   wave: '0.....|10......|.....'},
+    {name: 'ping_rx_eop',   wave: '0.....|...10...|.....'},
+    {name: 'ctrl',          wave: 'x.....|.=......|.....', data: '0x10'},
+    {name: 'ping_rx_serial',wave: 'x.....|.=......|.....', data: '1'},
+    {name: 'ping_rx_time',  wave: 'x.....|...=....|.....', data: 'Time1'},
+    {name: 'rx_is_ping',    wave: '0.....|..1.....|.....'},
+    {name: 'ping_received', wave: '0.....|....1...|..0..'},
+    {name: 'ping_latency',  wave: 'x.....|....=...|.....', data: 'L1'},
+  ],
+//    edge: [
+//    'a|-|b 4096 clocks'
+//  ]
+} //top

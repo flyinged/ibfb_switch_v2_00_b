@@ -45,3 +45,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+*.bak
+*~
+~*
+*.swp
+*.wlf
+*CVS/
+*sim/work/
+hdl/vhdl/.#ibfb_comm_package.vhd.1.5

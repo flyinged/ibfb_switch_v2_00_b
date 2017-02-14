@@ -1,0 +1,20 @@
+{
+  //head:{
+  // text:'IBFB Cavity BPM ADC Interface',
+  //}, //end of head
+  signal: [
+  // ['ADC CLOCK',
+    {name: 'clk',         wave: 'p....|.........'},
+    {name: 'trigger',     wave: '010..|.........'},
+    {name: 'RAM_reset',   wave: '0.1..|0........', node: '..a...b'},
+    {name: 'MAIN_FSM',    wave: '=.=..|=...=...=', data: 'idle reset read_FIFO_0 read_FIFO_1'},
+  	{name: 'ram_update',  wave: '0....|...10..10'},
+  	{name: 'discard_x/y', wave: '0....|....=...='},
+    {name: 'pkt_data',    wave: 'x....|.=...=...', data: 'pkt0 pkt1'},
+    {name: 'output_x',    wave: 'x....|..=...=..', data: 'pkt0_x pkt1_x'},
+    {name: 'output_y',    wave: 'x....|..=...=..', data: 'pkt0_y pkt1_y'},
+  ],
+    edge: [
+    'a|-|b 4096 clocks'
+  ]
+} //top
