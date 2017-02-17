@@ -317,6 +317,8 @@ architecture behavioral of user_logic is
   signal yrouter_f13_to_back,  yrouter_f13_to_side  : std_logic;
   signal yrouter_side_to_back, yrouter_side_to_side : std_logic;
 
+  signal xrouter_csp_data, yrouter_csp_data : std_logic_vector(127 downto 0);
+
   signal filt13_rst_c, filt13_reg_c : std_logic;
   signal filt02_rst_c, filt02_reg_c : std_logic;
   signal filt13_trig_c : std_logic;
@@ -394,7 +396,7 @@ architecture behavioral of user_logic is
   for all: ibfb_packet_router use entity ibfb_common_v1_00_b.ibfb_packet_router(pkt_buf); 
 
   --DEBUG
-  constant CSP_SET : natural := 3;
+  constant CSP_SET : natural := 1;
   signal xrouter_o_cnt, yrouter_o_cnt : unsigned(7 downto 0);
 
 begin
@@ -559,22 +561,18 @@ O_CSP_CLK   <= core_clk; --Bus2IP_Clk;
 O_CSP_REG_P : process(core_clk) 
 begin
     if rising_edge(core_clk) then
-        if r_ibfb_timing_lclk.sl_global_pulse_trg = '1' then
-            xrouter_o_cnt <= (others => '0');
-        elsif xrouter_o_valid(0) = '1' then
-            xrouter_o_cnt <= xrouter_o_cnt+1;
-        end if;
-
-        O_CSP_DATA( 31 downto   0) <= xrouter_o_data(0);
-        O_CSP_DATA( 35 downto  32) <= xrouter_o_charisk(0);
-        O_CSP_DATA(            36) <= xrouter_o_valid(0);
-        O_CSP_DATA(            37) <= xrouter_o_next(0);
-        O_CSP_DATA(            38) <= xrouter_o_err(0);
-        O_CSP_DATA(            39) <= r_ibfb_timing_lclk.sl_global_pulse_trg;
-        O_CSP_DATA( 47 downto  40) <= std_logic_vector(xrouter_o_cnt);
-        O_CSP_DATA(            48) <= xrouter_i_valid(0);
-        O_CSP_DATA(            49) <= xrouter_i_valid(1);
-        O_CSP_DATA(            50) <= xrouter_i_valid(2);
+        O_CSP_DATA( 31 downto   0) <= xrouter_i_data(0); --input from filter 02
+        O_CSP_DATA( 63 downto  32) <= xrouter_i_data(2); --input from bpm
+        O_CSP_DATA( 95 downto  64) <= xrouter_o_data(0); --output to P0
+        O_CSP_DATA( 99 downto  96) <= xrouter_i_charisk(0);
+        O_CSP_DATA(103 downto 100) <= xrouter_i_charisk(2);
+        O_CSP_DATA(107 downto 104) <= xrouter_o_charisk(0);
+        O_CSP_DATA(           108) <= xrouter_i_valid(0);
+        O_CSP_DATA(           109) <= xrouter_i_valid(2);
+        O_CSP_DATA(           110) <= xrouter_o_valid(0);
+        O_CSP_DATA(           111) <= xrouter_i_next(0);
+        O_CSP_DATA(           112) <= xrouter_i_next(2);
+        O_CSP_DATA(           113) <= xrouter_o_next(0);
     end if;
 end process;
 end generate; --CSP1_GEN
@@ -643,6 +641,22 @@ begin
     end if;
 end process;
 end generate; --CSP3_GEN
+
+---------------------------------------------------------------------------
+--csp_set4.cpj
+--packet buffer inside router
+---------------------------------------------------------------------------
+CSP4_GEN : if CSP_SET = 4 generate
+
+O_CSP_CLK   <= core_clk; --Bus2IP_Clk;
+
+O_CSP_REG_P : process(core_clk) 
+begin
+    if rising_edge(core_clk) then
+        O_CSP_DATA( 99 downto   0) <= xrouter_csp_data(99 downto  0);
+    end if;
+end process;
+end generate; --CSP4_GEN
 
 ---------------------------------------------------------------------------
 -- PLB connections
@@ -1491,6 +1505,7 @@ port map(
     i_rst     => router_rst,
     i_err_rst => router_err_rst,
     i_out_en  => "11",
+    o_csp_data => xrouter_csp_data,
     i_routing_table => xrouter_table,
     --input (FIFO, FWFT)
     o_next    => xrouter_i_next,
@@ -1524,6 +1539,7 @@ port map(
     i_rst     => router_rst,
     i_err_rst => router_err_rst,
     i_out_en  => "11",
+    o_csp_data => yrouter_csp_data,
     i_routing_table => yrouter_table,
     --input (FIFO, FWFT)
     o_next    => yrouter_i_next,
